@@ -29,7 +29,93 @@
         endMonth: {{ endMonth }},
         endDay: {{ endDay }},
     </p>
+    <div id="container" style="width: 80%; margin-left: auto; margin-right: auto;">
+        <canvas id="throughput-chart"></canvas>
+    </div>
+    {% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.0.1/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
+    <script>
+
+    var read_data = {{ data|safe }}
+    var labels = {{ labels|safe }}.map((label) => moment(label, "MM/DD/YYYY HH:mm:ss").valueOf())
+    pointData = [];
+    for (let i = 0; i < read_data.length; i++) {
+        pointData.push({x:labels[i], y:read_data[i]})
+    }
+    const data = {
+        datasets: [{
+          data: pointData,
+          label: 'Throughput',
+          cubicInterpolationMode: 'monotone',
+          borderColor: '#33839A',
+          borderWidth: 2,
+        }],
+      }
+    var config = {
+      type: 'line',
+      data: data,
+      options: {
+        backgroundColor: '#33839A',
+        parsing: false,
+        scales: {
+            x: {
+                type: 'time',
+                ticks: {
+                  source: 'auto',
+                  autoSkip: true,
+                }
+            },
+            y: {
+                type: 'linear',
+            }
+        },
+        plugins: {
+          decimation: {
+              enabled: true,
+              algorithm: 'lttb',
+              samples: 150,
+              threshold: 10,
+          },
+          zoom: {
+            zoom: {
+              wheel: {
+                enabled: true,
+              },
+              mode: 'x',
+            },
+            pan: {
+                enabled: true,
+                mode: 'x',
+            },
+            limits: {
+                x: {
+                    min: {{ labels|safe }}.map((label) => moment(label, "MM/DD/YYYY HH:mm:ss"))[0].valueOf(),
+                    max: {{ labels|safe }}.map((label) => moment(label, "MM/DD/YYYY HH:mm:ss"))[ {{labels|safe}}.length - 1 ].valueOf(),
+                },
+                y: {
+                    min: Math.min(...{{ data|safe }}) - Math.floor(Math.min(...{{ data|safe }})/50),
+                    max: Math.max(...{{ data|safe }}) + Math.floor(Math.min(...{{ data|safe }})/50),
+                }
+            }
+          },
+        }
+      },
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('throughput-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+    </script>
+    {% endblock scripts %}
 {% endif %}
+
+
 
 <div class="border border-5 mt-3 p-3">
     <h1>

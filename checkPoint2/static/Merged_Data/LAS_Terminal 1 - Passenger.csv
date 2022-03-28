@@ -1,0 +1,8 @@
+Index,Date_2017,Hour,Throughput_2017,Week Number,Weekday,Date_2018,Throughput_2018
+0,,14:00:00,,25,Sunday,6/24/18,859
+1,,20:00:00,,26,Monday,6/25/18,358
+2,,6:00:00,,26,Saturday,6/30/18,1144
+3,,8:00:00,,26,Saturday,6/30/18,939
+4,10/14/17,16:00:00,509,41,Saturday,,
+5,10/14/17,18:00:00,330,41,Saturday,,
+6,10/12/17,21:00:00,155,41,Thursday,,
