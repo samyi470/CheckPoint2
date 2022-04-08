@@ -11,15 +11,27 @@ class SearchForm(ModelForm):
     helper = FormHelper()
     helper.form_show_labels = False
     helper.layout = Layout(
-        Row(
-            Column('terminal', css_class='form-group col-6'),
-            Column('start', css_class='form-group col-3'),
-            Column('end', css_class='form-group col-3'),
-            css_class='form-row'
+        Div(
+            Div(
+                'terminal',
+                css_class='col-5'
+            ),
+            Div(
+                'start',
+                css_class='col-auto'
+            ),
+            Div(
+                'end',
+                css_class='col-auto'
+            ),
+            css_class='row p-3 d-flex justify-content-center'
         ),
         Div(
-            Submit('submit', 'Submit'),
-            css_class='d-flex justify-content-center'
+            Div(
+                Submit('submit', 'Submit'),
+                css_class='col-auto'
+            ),
+            css_class='row pb-3 d-flex justify-content-center'
         )
     )
 
