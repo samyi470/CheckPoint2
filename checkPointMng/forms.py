@@ -14,15 +14,15 @@ class SearchForm(ModelForm):
         Div(
             Div(
                 'terminal',
-                css_class='col-5'
+                css_class='col-xs-12 col-md-6'
             ),
             Div(
                 'start',
-                css_class='col-auto'
+                css_class='col-sm-6 col-md-3'
             ),
             Div(
                 'end',
-                css_class='col-auto'
+                css_class='col-sm-6 col-md-3'
             ),
             css_class='row p-3 d-flex justify-content-center'
         ),
