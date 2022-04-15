@@ -4,6 +4,11 @@ from .models import Search
 from .forms import SearchForm
 import datetime
 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from io import StringIO
+
 
 # hello world test
 def index(request):
@@ -17,6 +22,7 @@ def index(request):
     endYear = ''
     endMonth = ''
     endDay = ''
+    data = None
 
     # if (3. form submitted from .html (POST))
     if request.method == 'POST':
@@ -53,6 +59,28 @@ def index(request):
             endMonth = endDate.strftime('%m')
             endDay = endDate.strftime('%d')
 
+            # read csv and store as DataFrame
+            df = pd.read_csv('checkPoint2/static/lax_predictions.csv', parse_dates=True)
+            df = df.set_index('Datetime')
+
+            # get slice of DataFrame according to search parameters
+            df2 = df.loc[startMonth.lstrip('0') + '/' + startDay.lstrip('0') + '/' + startYear + ' 3:00':endMonth.lstrip('0') + '/' + endDay.lstrip('0') + '/' + endYear + ' 3:00']
+            df2 = df2[:-1]
+
+            # plot
+            fig = plt.figure()
+            plt.rcParams.update({'figure.figsize': (15, 10), 'figure.dpi': 120})
+            plt.xticks(rotation=90)
+            plt.plot(df2['Throughput'], color='red')
+            plt.plot(df2['Prediction'], color='blue')
+
+            # return as graphic
+            imgdata = StringIO()
+            fig.savefig(imgdata, format='svg')
+            imgdata.seek(0)
+
+            data = imgdata.getvalue()
+
     # (2., 5. render .html page)
     return render(request,
                   'checkPointMng/home.html',
@@ -68,6 +96,7 @@ def index(request):
                       'endYear': endYear,
                       'endMonth': endMonth,
                       'endDay': endDay,
+                      'data': data,
                   })
 
     # return render(request, 'checkPointMng/home.html')
