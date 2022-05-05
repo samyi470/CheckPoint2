@@ -41,10 +41,13 @@
     <script>
 
     var read_data = {{ data|safe }}
+    var read_predictions = {{ prediction|safe }}
     var labels = {{ labels|safe }}.map((label) => moment(label, "MM/DD/YYYY HH:mm:ss").valueOf())
     pointData = [];
+    predictionData = [];
     for (let i = 0; i < read_data.length; i++) {
         pointData.push({x:labels[i], y:read_data[i]})
+        predictionData.push({x:labels[i], y:read_predictions[i]})
     }
     const data = {
         datasets: [{
@@ -52,6 +55,15 @@
           label: 'Throughput',
           cubicInterpolationMode: 'monotone',
           borderColor: '#33839A',
+          backgroundColor: '#33839A',
+          borderWidth: 2,
+        },
+        {
+          data: predictionData,
+          label: 'Prediction',
+          cubicInterpolationMode: 'monotone',
+          borderColor: '#e06b63',
+          backgroundColor: '#e06b63',
           borderWidth: 2,
         }],
       }
@@ -59,7 +71,6 @@
       type: 'line',
       data: data,
       options: {
-        backgroundColor: '#33839A',
         parsing: false,
         scales: {
             x: {

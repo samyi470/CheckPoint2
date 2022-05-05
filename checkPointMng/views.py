@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Search, TerminalThroughput
+from .models import Search, TerminalThroughput, TerminalPrediction
 from .forms import SearchForm
 import datetime
 
@@ -19,6 +19,7 @@ def index(request):
     endDay = ''
     labels=[]
     data=[]
+    predictions=[]
 
     # if (3. form submitted from .html (POST))
     if request.method == 'POST':
@@ -56,12 +57,19 @@ def index(request):
             endDay = endDate.strftime('%d')
 
             throughput_list = TerminalThroughput.objects.filter(date__gte = startDate, date__lte = endDate, terminal__name = terminal).order_by("date")
+            predictions_list = TerminalPrediction.objects.filter(date__gte = startDate, date__lte = endDate, terminal__name = terminal).order_by("date")
             labels = []
             data = []
+            predictions = []
+
             for throughput in throughput_list:
                 labels.append(throughput.date.strftime("%m/%d/%Y %H:%M:%S"))
                 data.append(throughput.throughput)
 
+            for prediction in predictions_list:
+                predictions.append(prediction.prediction)
+
+            print(predictions)
     # (2., 5. render .html page)
     return render(request,
                   'checkPointMng/home.html',
@@ -79,6 +87,7 @@ def index(request):
                       'endDay': endDay,
                       'labels': labels,
                       'data': data,
+                      'prediction': predictions,
                   })
 
     # return render(request, 'checkPointMng/home.html')

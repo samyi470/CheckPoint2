@@ -64,6 +64,13 @@ class TerminalThroughput(models.Model):
     airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
 
 
+class TerminalPrediction(models.Model):
+    date = models.DateTimeField()
+    prediction = models.IntegerField()
+    terminal = models.ForeignKey(Terminal, on_delete=models.CASCADE)
+    airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
+
+
 class DateInput(forms.DateInput):
     input_type = 'date'
 

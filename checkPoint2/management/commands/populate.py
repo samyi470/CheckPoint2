@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from checkPointMng.models import Terminal, TerminalThroughput, Airport
+from checkPointMng.models import Terminal, TerminalThroughput, TerminalPrediction, Airport
 
 import pandas as pd
 
@@ -23,6 +23,11 @@ class Command(BaseCommand):
                                                    throughput=row['Throughput'],
                                                    terminal=newTerminal,
                                                    airport=lAXAirport)
+                newPrediction = TerminalPrediction(date=row['Datetime'],
+                                                   prediction=row['Prediction'],
+                                                   terminal=newTerminal,
+                                                   airport=lAXAirport)
+                newPrediction.save()
                 newThroughput.save()
                 print('currently at', index)
 
