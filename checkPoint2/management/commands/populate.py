@@ -17,7 +17,7 @@ class Command(BaseCommand):
             newTerminal = Terminal(name=term[0], airport=lAXAirport)
             newTerminal.save()
 
-            df = pd.read_csv('~/Documents/Github/CheckPoint2/checkPoint2/static/Data/lax_' + term[1] + '_predictions.csv', parse_dates=["Datetime"])
+            df = pd.read_csv('./checkPoint2/static/Data/lax_' + term[1] + '_predictions.csv', parse_dates=["Datetime"])
             for index, row in df.iterrows():
                 newThroughput = TerminalThroughput(date=row['Datetime'],
                                                    throughput=row['Throughput'],
